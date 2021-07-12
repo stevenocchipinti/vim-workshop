@@ -24,5 +24,17 @@ html {
   height: 100%;
 }
 
+.vim-input {
+  width: 1px;
+  color: transparent;
+  background-color: transparent;
+  padding: 0px;
+  border: 0px;
+  outline: none;
+  position: relative;
+  top: 0px;
+  left: 0px;
+}
+
 
 /*# sourceMappingURL=/bundle.css.map */
