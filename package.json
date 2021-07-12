@@ -10,15 +10,16 @@
     "LICENSE.txt"
   ],
   "scripts": {
-    "build:tsc": "tsc -p .",
-    "build:parcel": "parcel build -d src -o bundle.js ./src/index.js",
     "build": "npm-run-all build:tsc build:parcel",
-    "watch:tsc": "tsc --watch -p .",
-    "watch:parcel": "parcel serve -p 1234 -d src -o bundle.js ./src/index.js",
-    "watch": "npm-run-all -p watch:tsc watch:parcel",
-    "start": "npm-run-all build watch",
+    "build:parcel": "parcel build -d src -o bundle.js ./src/index.js",
+    "build:tsc": "tsc -p .",
+    "clean": "git clean -fX",
     "lint": "eslint '*.tsx' 'src/*.tsx'",
-    "clean": "git clean -fX"
+    "postinstall": "patch-package",
+    "start": "npm-run-all build watch",
+    "watch": "npm-run-all -p watch:tsc watch:parcel",
+    "watch:parcel": "parcel serve -p 1234 -d src -o bundle.js ./src/index.js",
+    "watch:tsc": "tsc --watch -p ."
   },
   "repository": {
     "type": "git",
@@ -66,6 +67,8 @@
     "typescript": "^3.5.3"
   },
   "dependencies": {
+    "patch-package": "^6.4.7",
+    "postinstall-postinstall": "^2.1.0",
     "vim-wasm": "~0.0.13"
   }
 }
