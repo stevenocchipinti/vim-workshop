@@ -3,7 +3,7 @@
 import * as React from "react"
 import { useState, useCallback } from "react"
 import { render } from "react-dom"
-import { useVim, checkVimWasmIsAvailable } from ".."
+import { useVim, checkVimWasmIsAvailable } from "./react-vim-wasm"
 import "./styles.css"
 
 const VIM_WASM_AVAILABLITY_MESSAGE = checkVimWasmIsAvailable()

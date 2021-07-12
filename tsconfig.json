@@ -8,7 +8,6 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noEmitOnError": true,
     "removeComments": false,
@@ -16,9 +15,5 @@
     "jsx": "react",
     "sourceMap": true
   },
-  "files": [
-    "index.tsx",
-    "test/smoke.tsx",
-    "example/index.tsx"
-  ]
+  "files": ["src/react-vim-wasm.tsx", "src/index.tsx"]
 }
