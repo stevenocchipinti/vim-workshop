@@ -58,8 +58,6 @@ export function useVim({
   const [vim, setVim] = useState(null as null | VimWasm)
 
   useEffect(() => {
-    // componentDidMount
-
     /* eslint-disable @typescript-eslint/no-non-null-assertion */
     const opts =
       drawer !== undefined
@@ -85,34 +83,7 @@ export function useVim({
     v.onTitleUpdate = onTitleUpdate
     v.onError = onError
 
-    if (canvas.current !== null) {
-      canvas.current.addEventListener(
-        "dragover",
-        (e: DragEvent) => {
-          e.stopPropagation()
-          e.preventDefault()
-          if (e.dataTransfer) {
-            e.dataTransfer.dropEffect = "copy"
-          }
-        },
-        false
-      )
-      canvas.current.addEventListener(
-        "drop",
-        (e: DragEvent) => {
-          e.stopPropagation()
-          e.preventDefault()
-          if (e.dataTransfer) {
-            v.dropFiles(e.dataTransfer.files).catch(onError)
-          }
-        },
-        false
-      )
-    }
-
-    if (onVimCreated !== undefined) {
-      onVimCreated(v)
-    }
+    if (onVimCreated !== undefined) onVimCreated(v)
 
     v.start({
       debug,
@@ -127,21 +98,16 @@ export function useVim({
     setVim(v)
 
     return () => {
-      // componentWillUnmount
-      if (v.isRunning()) {
-        v.cmdline("qall!")
-      }
+      if (v.isRunning()) v.cmdline("qall!")
     }
-    /* eslint-disable react-hooks/exhaustive-deps */
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [worker, debug, perf, clipboard, files, dirs, persistentDirs, cmdArgs])
   // Note: Vim worker should be started once at componentDidMount
   // `worker`, `debug`, `perf` and `clipboard` are startup configuration. So when they are changed,
   // new Vim instance must be created with the new configuration.
-  /* eslint-enable react-hooks/exhaustive-deps */
 
-  if (drawer !== undefined) {
-    return [null, null, vim]
-  }
+  if (drawer !== undefined) return [null, null, vim]
 
   return [canvas, input, vim]
 }
@@ -160,11 +126,10 @@ const INPUT_STYLE = {
 
 export const Vim: React.SFC<VimProps> = props => {
   const [canvasRef, inputRef, vim] = useVim(props)
-  if (canvasRef === null || inputRef === null) {
-    // When drawer prop is set, it has responsibility to render screen.
-    // This component does not render screen and handle inputs.
-    return null
-  }
+
+  // When drawer prop is set, it has responsibility to render screen.
+  // This component does not render screen and handle inputs.
+  if (canvasRef === null || inputRef === null) return null
 
   const {
     style,
@@ -178,6 +143,7 @@ export const Vim: React.SFC<VimProps> = props => {
     onError,
     readClipboard
   } = props
+
   if (vim !== null) {
     vim.onVimExit = onVimExit
     vim.onVimInit = onVimInit
