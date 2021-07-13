@@ -19,8 +19,8 @@ html {
   padding: 0.75rem;
   margin: 20px 0;
   height: 50vh;
-  background-color: var(--window-color);
   border-radius: 10px;
+  background-color: var(--window-color);
   box-shadow: var(--shadow);
 }
 
