@@ -3,7 +3,7 @@ import * as React from "react"
 import { useState, useCallback } from "react"
 import { render } from "react-dom"
 import { VimWasm } from "vim-wasm"
-import { Vim, checkVimWasmIsAvailable } from "./react-vim-wasm"
+import { Vim, checkVimWasmIsAvailable } from "./Vim"
 import "./styles.css"
 
 const VIM_WASM_AVAILABLITY_MESSAGE = checkVimWasmIsAvailable()
@@ -95,7 +95,7 @@ const VimWasmExample: React.SFC = () => {
 
       <div className="screen-wrapper">
         <Vim
-          worker="./static/vim-wasm/vim.js"
+          worker="./vim-wasm/vim.js"
           className="vim-screen"
           onVimCreated={onVimCreated}
           onVimExit={onVimExit}
