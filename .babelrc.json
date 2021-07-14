@@ -1,15 +1,4 @@
 {
-  "presets": [
-    [
-      "env",
-      {
-        "targets": {
-          "browsers": [
-            "last 2 Chrome versions",
-            "last 1 Firefox version"
-          ]
-        }
-      }
-    ]
-  ]
+  "presets": ["env"],
+  "plugins": ["babel-plugin-styled-components"]
 }

@@ -2,7 +2,9 @@
 import * as React from "react"
 import { useState, useCallback } from "react"
 import { render } from "react-dom"
+import styled from "styled-components"
 import Vim, { VimWasmControl, checkVimWasmIsAvailable } from "./Vim"
+import Window from "./Window"
 import "./styles.css"
 
 const VIM_WASM_AVAILABLITY_MESSAGE = checkVimWasmIsAvailable()
@@ -23,6 +25,11 @@ function EndChallenge()
   redraw
 endfunction
 `.trim()
+
+const VimWindow = styled(Window)`
+  margin: 20px 0;
+  height: 50vh;
+`
 
 const VimWasmExample: React.FC = () => {
   const [vimRunning, setVimRunning] = useState(false)
@@ -93,10 +100,9 @@ const VimWasmExample: React.FC = () => {
       <button onClick={onSubmit}>Submit</button>
       <button onClick={onRestart}>Restart</button>
 
-      <div className="screen-wrapper">
+      <VimWindow>
         <Vim
           worker="./vim-wasm/vim.js"
-          className="vim-screen"
           onVimCreated={onVimCreated}
           onFileExport={onFileExport}
           onVimExit={() => setVimRunning(false)}
@@ -106,7 +112,7 @@ const VimWasmExample: React.FC = () => {
           files={FILES}
           onKey={onKey}
         />
-      </div>
+      </VimWindow>
     </>
   )
 }

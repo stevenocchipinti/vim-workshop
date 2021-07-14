@@ -1,15 +1,20 @@
 :root {
   --shadow: #0007 0px 20px 30px -10px;
-  --background-color: hsl(222 20% 30%);
+  --background-color: #1a202c;
   --window-color: hsl(222 14% 18%);
+  --text-color: #eee;
 }
 
 html {
   background: var(--background-color);
+  color: var(--text-color);
+  font-family: sans-serif;
 }
 
-body {
-  color: white;
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
 }
 
 #app {
@@ -17,18 +22,4 @@ body {
   flex-direction: column;
   max-width: 800px;
   margin: 0 auto;
-}
-
-.screen-wrapper {
-  padding: 0.75rem;
-  margin: 20px 0;
-  height: 50vh;
-  border-radius: 10px;
-  background-color: var(--window-color);
-  box-shadow: var(--shadow);
-}
-
-.vim-screen {
-  width: 100%;
-  height: 100%;
 }

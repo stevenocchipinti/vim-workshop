@@ -1,26 +1,32 @@
 import * as React from "react"
 import { useVim } from "./useVim"
 import { VimProps } from "./types"
+import styled from "styled-components"
 
-const INPUT_STYLE = {
-  width: "1px",
-  color: "transparent",
-  backgroundColor: "transparent",
-  padding: "0px",
-  border: "0px",
-  outline: "none",
-  position: "relative",
-  top: "0px",
-  left: "0px",
-} as const
+const Input = styled.input`
+  width: 1px;
+  color: transparent;
+  background-color: transparent;
+  padding: 0px;
+  border: 0px;
+  outline: none;
+  position: relative;
+  top: 0px;
+  left: 0px;
+`
+
+const Canvas = styled.canvas`
+  width: 100%;
+  height: 100%;
+`
 
 const Vim: React.FC<VimProps> = ({ className, style, id, ...props }) => {
   const [canvasRef, inputRef] = useVim(props)
 
   return (
     <>
-      <canvas ref={canvasRef} style={style} className={className} id={id} />
-      <input ref={inputRef} style={INPUT_STYLE} autoComplete="off" autoFocus />
+      <Canvas ref={canvasRef} style={style} className={className} id={id} />
+      <Input ref={inputRef} autoComplete="off" autoFocus />
     </>
   )
 }
