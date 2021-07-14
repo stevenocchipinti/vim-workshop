@@ -2,8 +2,7 @@
 import * as React from "react"
 import { useState, useCallback } from "react"
 import { render } from "react-dom"
-import { VimWasm } from "vim-wasm"
-import { Vim, checkVimWasmIsAvailable } from "./Vim"
+import Vim, { VimWasmControl, checkVimWasmIsAvailable } from "./Vim"
 import "./styles.css"
 
 const VIM_WASM_AVAILABLITY_MESSAGE = checkVimWasmIsAvailable()
@@ -25,12 +24,12 @@ function EndChallenge()
 endfunction
 `.trim()
 
-const VimWasmExample: React.SFC = () => {
-  const [vim, setVim] = useState<VimWasm | null>(null)
+const VimWasmExample: React.FC = () => {
+  const [vimRunning, setVimRunning] = useState(false)
+  const [won, setWon] = useState(false)
+  const [vimControl, setVimControl] = useState<VimWasmControl | null>(null)
   const [targetText, setTargetText] = useState("")
   const [keystrokes, setKeystrokes] = useState<string[]>([])
-
-  const [count, setCount] = useState(0)
 
   const FILES = React.useMemo(() => {
     const params = new URLSearchParams(window.location.search)
@@ -42,20 +41,12 @@ const VimWasmExample: React.SFC = () => {
     return {
       "/home/web_user/.vim/vimrc": vimrc,
       "/challenge/start": start || "",
-      "/challenge/end": end || ""
+      "/challenge/end": end || "",
     }
   }, [])
 
-  const onVimCreated = useCallback(v => {
-    setVim(v)
-  }, [])
-
-  const onError = useCallback((e: Error) => {
-    console.error(`Error! ${e.message}`)
-  }, [])
-
-  const onVimExit = useCallback((status: number) => {
-    console.log(`Vim exited with status ${status}`)
+  const onVimCreated = useCallback(vControl => {
+    setVimControl(vControl)
   }, [])
 
   const onKey = useCallback(event => {
@@ -64,32 +55,41 @@ const VimWasmExample: React.SFC = () => {
 
   const onSubmit = useCallback(
     _event => {
-      vim?.cmdline("call EndChallenge()")
+      setVimRunning(false)
+      vimControl?.vim?.cmdline("call EndChallenge()")
     },
-    [vim]
+    [vimControl]
   )
 
-  const onRestart = useCallback(_event => {
-    setCount(count => count + 1)
-  }, [])
+  const onRestart = useCallback(
+    _event => {
+      vimControl?.restart()
+      setKeystrokes([])
+    },
+    [vimControl]
+  )
 
   const onFileExport = useCallback(
     (_path: string, buffer: ArrayBuffer) => {
       const td = new TextDecoder()
       const content = td.decode(buffer).replace(/\n$/, "")
-      console.log(targetText === content ? "You win" : "You lose")
-      vim?.cmdline("qall!")
+      setWon(targetText === content)
+      vimControl?.vim?.cmdline("qall!")
     },
-    [targetText, vim]
+    [targetText, vimControl]
   )
+
+  const state = vimRunning ? "Running" : won ? "You won!" : "You lost"
 
   if (VIM_WASM_AVAILABLITY_MESSAGE !== undefined)
     alert(VIM_WASM_AVAILABLITY_MESSAGE)
 
   return (
     <>
-      <h1 style={{ color: "white" }}>{keystrokes.length} keystrokes</h1>
-      <h2 style={{ color: "white" }}>{keystrokes.join(" - ")}</h2>
+      <h1>{keystrokes.length} keystrokes</h1>
+      <h2>{keystrokes.join(" - ")}</h2>
+      <h2>{state}</h2>
+
       <button onClick={onSubmit}>Submit</button>
       <button onClick={onRestart}>Restart</button>
 
@@ -98,18 +98,17 @@ const VimWasmExample: React.SFC = () => {
           worker="./vim-wasm/vim.js"
           className="vim-screen"
           onVimCreated={onVimCreated}
-          onVimExit={onVimExit}
-          onError={onError}
           onFileExport={onFileExport}
-          onKeyDown={onKey}
+          onVimExit={() => setVimRunning(false)}
+          onVimInit={() => setVimRunning(true)}
           cmdArgs={CMDARGS}
           dirs={DIRS}
           files={FILES}
-          dependency={count}
+          onKey={onKey}
         />
       </div>
     </>
   )
 }
 
-render(<VimWasmExample />, document.getElementById("react-root"))
+render(<VimWasmExample />, document.getElementById("app"))

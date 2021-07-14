@@ -1,48 +1,47 @@
 import * as React from "react"
 import { useState, useEffect, useRef } from "react"
-import { VimWasm } from "vim-wasm"
-import { VimProps } from "./types"
+import { useRerender } from "./useRerender"
+import { VimWasm } from "./vim-wasm"
+import { VimProps, VimWasmControl } from "./types"
 
-export function useVim(
-  {
-    worker,
-    debug,
-    perf,
-    clipboard,
-    onVimExit,
-    onVimInit,
-    onFileExport,
-    onKeyDown,
-    readClipboard,
-    onWriteClipboard,
-    onError,
-    onTitleUpdate,
-    files,
-    fetchFiles,
-    dirs,
-    persistentDirs,
-    cmdArgs,
-    onVimCreated
-  }: VimProps,
-  dependency: number
-): [
+export function useVim({
+  worker,
+  debug,
+  perf,
+  clipboard,
+  onVimExit,
+  onVimInit,
+  onFileExport,
+  readClipboard,
+  onWriteClipboard,
+  onError,
+  onTitleUpdate,
+  files,
+  fetchFiles,
+  dirs,
+  persistentDirs,
+  cmdArgs,
+  onVimCreated,
+  onKey,
+}: VimProps): [
   React.MutableRefObject<HTMLCanvasElement | null> | null,
   React.MutableRefObject<HTMLInputElement | null> | null,
-  VimWasm | null
+  VimWasmControl | null
 ] {
   const canvas = useRef<HTMLCanvasElement | null>(null)
   const input = useRef<HTMLInputElement | null>(null)
-  const [vim, setVim] = useState(null as null | VimWasm)
+  const [restartDep, restart] = useRerender()
+  const [vimControl, setVimControl] = useState(null as null | VimWasmControl)
 
   useEffect(() => {
-    const opts = {
+    /* eslint-disable @typescript-eslint/no-non-null-assertion */
+    const v = new VimWasm({
       workerScriptPath: worker,
-      canvas: canvas?.current,
-      input: input?.current,
-      onKeyDown
-    }
-
-    const v = new VimWasm(opts)
+      canvas: canvas.current!,
+      input: input.current!,
+      onKey,
+    })
+    /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
     v.onVimInit = onVimInit
     v.onVimExit = onVimExit
@@ -52,7 +51,9 @@ export function useVim(
     v.onTitleUpdate = onTitleUpdate
     v.onError = onError
 
-    if (onVimCreated !== undefined) onVimCreated(v)
+    const vControl: VimWasmControl = { vim: v, restart }
+
+    if (onVimCreated !== undefined) onVimCreated(vControl)
 
     v.start({
       debug,
@@ -62,9 +63,9 @@ export function useVim(
       fetchFiles,
       dirs,
       persistentDirs,
-      cmdArgs
+      cmdArgs,
     })
-    setVim(v)
+    setVimControl(vControl)
 
     return () => {
       if (v.isRunning()) v.cmdline("qall!")
@@ -80,7 +81,7 @@ export function useVim(
     dirs,
     persistentDirs,
     cmdArgs,
-    dependency
+    restartDep,
   ])
   /* eslint-enable react-hooks/exhaustive-deps */
 
@@ -88,5 +89,5 @@ export function useVim(
   // `debug`, `perf` and `clipboard` are startup configuration. So when they
   // are changed, new Vim instance must be created with the new configuration.
 
-  return [canvas, input, vim]
+  return [canvas, input, vimControl]
 }

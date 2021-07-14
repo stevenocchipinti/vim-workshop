@@ -1,4 +1,9 @@
-import { VimWasm } from "vim-wasm"
+import { VimWasm } from "./vim-wasm"
+
+export interface VimWasmControl {
+  vim: VimWasm
+  restart: () => void
+}
 
 export interface VimProps {
   worker: string
@@ -8,7 +13,6 @@ export interface VimProps {
   onVimExit?: (status: number) => void
   onVimInit?: () => void
   onFileExport?: (fullpath: string, contents: ArrayBuffer) => void
-  onKeyDown?: (event: KeyboardEvent) => void
   readClipboard?: () => Promise<string>
   onWriteClipboard?: (text: string) => Promise<void>
   onError?: (err: Error) => void
@@ -21,6 +25,8 @@ export interface VimProps {
   className?: string
   style?: React.CSSProperties
   id?: string
-  onVimCreated?: (vim: VimWasm) => void
+  onVimCreated?: (vim: VimWasmControl) => void
+
+  onKey?: (event: KeyboardEvent) => void
   dependency?: number
 }

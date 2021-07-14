@@ -8,7 +8,11 @@ html {
   background: var(--background-color);
 }
 
-#react-root {
+body {
+  color: white;
+}
+
+#app {
   display: flex;
   flex-direction: column;
   max-width: 800px;
