@@ -30,6 +30,8 @@ const VimWasmExample: React.SFC = () => {
   const [targetText, setTargetText] = useState("")
   const [keystrokes, setKeystrokes] = useState<string[]>([])
 
+  const [count, setCount] = useState(0)
+
   const FILES = React.useMemo(() => {
     const params = new URLSearchParams(window.location.search)
     const start = params.get("start") || ""
@@ -53,7 +55,7 @@ const VimWasmExample: React.SFC = () => {
   }, [])
 
   const onVimExit = useCallback((status: number) => {
-    alert(`Vim exited with status ${status}`)
+    console.log(`Vim exited with status ${status}`)
   }, [])
 
   const onKey = useCallback(event => {
@@ -66,6 +68,10 @@ const VimWasmExample: React.SFC = () => {
     },
     [vim]
   )
+
+  const onRestart = useCallback(_event => {
+    setCount(count => count + 1)
+  }, [])
 
   const onFileExport = useCallback(
     (_path: string, buffer: ArrayBuffer) => {
@@ -85,6 +91,7 @@ const VimWasmExample: React.SFC = () => {
       <h1 style={{ color: "white" }}>{keystrokes.length} keystrokes</h1>
       <h2 style={{ color: "white" }}>{keystrokes.join(" - ")}</h2>
       <button onClick={onSubmit}>Submit</button>
+      <button onClick={onRestart}>Restart</button>
 
       <div className="screen-wrapper">
         <Vim
@@ -98,6 +105,7 @@ const VimWasmExample: React.SFC = () => {
           cmdArgs={CMDARGS}
           dirs={DIRS}
           files={FILES}
+          dependency={count}
         />
       </div>
     </>
