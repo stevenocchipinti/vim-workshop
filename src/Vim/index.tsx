@@ -18,6 +18,7 @@ const Input = styled.input`
 const Canvas = styled.canvas`
   width: 100%;
   height: 100%;
+  margin-bottom: -28px;
 `
 
 const Vim: React.FC<VimProps> = ({ className, style, id, ...props }) => {
