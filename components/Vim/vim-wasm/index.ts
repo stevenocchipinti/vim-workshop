@@ -1,3 +1,5 @@
+// @ts-nocheck
+//
 /* VIM - Vi IMproved		by Bram Moolenaar
  *				Wasm support by rhysd <https://github.com/rhysd>
  *
@@ -1103,12 +1105,8 @@ export class VimWasm {
   }
 
   sendKeydown(key: string, keyCode: number, modifiers?: KeyModifiers) {
-    const {
-      ctrl = false,
-      shift = false,
-      alt = false,
-      meta = false,
-    } = modifiers ?? {}
+    const { ctrl = false, shift = false, alt = false, meta = false } =
+      modifiers ?? {}
     if (key.length > 1) {
       if (
         key === "Unidentified" ||

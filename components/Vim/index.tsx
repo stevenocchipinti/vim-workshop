@@ -33,7 +33,7 @@ const Vim: React.FC<VimProps> = ({ className, style, id, ...props }) => {
 }
 
 export default Vim
-export { VimWasmControl } from "./types"
+export type { VimWasmControl } from "./types"
 export {
   VimWasm,
   checkBrowserCompatibility as checkVimWasmIsAvailable,

@@ -34,14 +34,12 @@ export function useVim({
   const [vimControl, setVimControl] = useState(null as null | VimWasmControl)
 
   useEffect(() => {
-    /* eslint-disable @typescript-eslint/no-non-null-assertion */
     const v = new VimWasm({
       workerScriptPath: worker,
       canvas: canvas.current!,
       input: input.current!,
       onKey,
     })
-    /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
     v.onVimInit = onVimInit
     v.onVimExit = onVimExit

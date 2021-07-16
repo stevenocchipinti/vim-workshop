@@ -1,11 +1,14 @@
-/* eslint-disable no-console */
 import * as React from "react"
-import { useEffect, useMemo, useState, useCallback } from "react"
-import { render } from "react-dom"
+import { useEffect, useState, useCallback } from "react"
+import Link from "next/link"
+import Image from "next/image"
 import styled from "styled-components"
-import Vim, { VimWasmControl, checkVimWasmIsAvailable } from "./Vim"
-import Window from "./Window"
-import "./styles.css"
+import type {} from "styled-components/cssprop"
+import Vim, {
+  VimWasmControl,
+  checkVimWasmIsAvailable,
+} from "../../components/Vim"
+import Window from "../../components/Window"
 
 const VIM_WASM_AVAILABLITY_MESSAGE = checkVimWasmIsAvailable()
 
@@ -13,9 +16,11 @@ const DIRS = ["/challenge"]
 const CMDARGS = ["/challenge/start"]
 
 const vimrc = `
-set expandtab tabstop=2 shiftwidth=2 softtabstop=2
+set expandtab tabstop=2 shiftwidth=2 softtabstop=2 splitright
 colorscheme onedark
 syntax enable
+
+inoremap <s-cr> <nop>
 
 function EndChallenge()
   write
@@ -67,6 +72,7 @@ const IntroWindow = styled(Window)`
 
 const TargetWindow = styled(Window)`
   grid-area: target;
+  font-family: monospace;
 `
 
 const VimWindow = styled(Window)`
@@ -113,39 +119,24 @@ const ChallengePage: React.FC = () => {
   const [targetText, setTargetText] = useState("")
   const [targetKeystrokes, setTargetKeystrokes] = useState(0)
   const [keystrokes, setKeystrokes] = useState<string[]>([])
+  const [files, setFiles] = useState<{ [path: string]: string }>()
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    setTargetKeystrokes(parseInt(params.get("target") || "0"))
+  const onVimCreated = useCallback(
+    vControl => {
+      vimControl.current = vControl
+    },
+    [vimControl]
+  )
 
-    const cb = (event: KeyboardEvent) => {
-      console.log(event)
-      if (event.key === "Escape" && event.shiftKey) {
-        console.log("sdf")
-        onRestart()
-      }
-    }
-    addEventListener("keydown", cb)
-    return () => removeEventListener("keydown", cb)
-  }, [])
+  const onSubmit = useCallback(() => {
+    vimControl.current?.vim?.cmdline("call EndChallenge()")
+  }, [vimControl])
 
-  const FILES = useMemo(() => {
-    const params = new URLSearchParams(window.location.search)
-    const start = params.get("start") || ""
-    const end = params.get("end") || ""
-
-    setTargetText(params.get("end") || "")
-
-    return {
-      "/home/web_user/.vim/vimrc": vimrc,
-      "/challenge/start": start || "",
-      "/challenge/end": end || "",
-    }
-  }, [])
-
-  const onVimCreated = useCallback(vControl => {
-    vimControl.current = vControl
-  }, [])
+  const onRestart = useCallback(() => {
+    vimControl.current?.restart()
+    setWon(undefined)
+    setKeystrokes([])
+  }, [vimControl])
 
   const onKey = useCallback(
     (event: KeyboardEvent) => {
@@ -153,19 +144,8 @@ const ChallengePage: React.FC = () => {
       else if (event.key === "Escape" && event.shiftKey) onRestart()
       else setKeystrokes(keystrokes => [...keystrokes, event.key])
     },
-    [vimControl.current, keystrokes]
+    [onSubmit, onRestart]
   )
-
-  const onSubmit = useCallback(() => {
-    console.log("submit", vimControl.current)
-    vimControl.current?.vim?.cmdline("call EndChallenge()")
-  }, [vimControl.current])
-
-  const onRestart = useCallback(() => {
-    vimControl.current?.restart()
-    setWon(undefined)
-    setKeystrokes([])
-  }, [vimControl.current])
 
   const onFileExport = useCallback(
     (_path: string, buffer: ArrayBuffer) => {
@@ -174,8 +154,30 @@ const ChallengePage: React.FC = () => {
       setWon(targetText === content)
       vimControl.current?.vim?.cmdline("qall!")
     },
-    [targetText, vimControl.current]
+    [targetText, vimControl]
   )
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const start = params.get("start") || ""
+    const end = (params.get("end") || "").replace(/\n$/, "")
+    const target = parseInt(params.get("target") || "0")
+
+    setTargetKeystrokes(target)
+    setTargetText(params.get("end") || "")
+    setFiles({
+      "/home/web_user/.vim/vimrc": vimrc,
+      "/challenge/start": start || "",
+      "/challenge/end": end || "",
+    })
+
+    const cb = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && event.shiftKey) onRestart()
+    }
+
+    addEventListener("keydown", cb)
+    return () => removeEventListener("keydown", cb)
+  }, [onRestart])
 
   if (VIM_WASM_AVAILABLITY_MESSAGE !== undefined)
     alert(VIM_WASM_AVAILABLITY_MESSAGE)
@@ -190,6 +192,16 @@ const ChallengePage: React.FC = () => {
   return (
     <Layout>
       <Toolbar>
+        <Link href="/" passHref>
+          <a>
+            <Image
+              src="/vim-workshop.svg"
+              alt="Vim workshop logo"
+              width={75}
+              height={75}
+            />
+          </a>
+        </Link>
         <Button onClick={onSubmit}>Submit</Button>
         <Button onClick={onRestart}>Restart</Button>
         <div>
@@ -198,18 +210,26 @@ const ChallengePage: React.FC = () => {
       </Toolbar>
 
       <WindowManager>
-        <IntroWindow>Hello</IntroWindow>
-        <TargetWindow>Target</TargetWindow>
+        <IntroWindow>
+          <h2 css="margin-bottom: 1rem">Welcome to Vim Workshop</h2>
+          <p>
+            Try to use the Vim window to transform the text into this target
+            text in as few keystrokes as you can.
+          </p>
+        </IntroWindow>
+        <TargetWindow>{targetText || "Loading..."}</TargetWindow>
         <VimWindow $border={getBorderState()}>
-          <Vim
-            worker="./vim-wasm/vim.js"
-            onVimCreated={onVimCreated}
-            onFileExport={onFileExport}
-            cmdArgs={CMDARGS}
-            dirs={DIRS}
-            files={FILES}
-            onKey={onKey}
-          />
+          {files && (
+            <Vim
+              worker="./vim-wasm/vim.js"
+              onVimCreated={onVimCreated}
+              onFileExport={onFileExport}
+              cmdArgs={CMDARGS}
+              dirs={DIRS}
+              files={files}
+              onKey={onKey}
+            />
+          )}
         </VimWindow>
       </WindowManager>
 
@@ -222,4 +242,4 @@ const ChallengePage: React.FC = () => {
   )
 }
 
-render(<ChallengePage />, document.getElementById("app"))
+export default ChallengePage
