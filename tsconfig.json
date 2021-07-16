@@ -8,17 +8,11 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noEmitOnError": true,
     "removeComments": false,
     "strictNullChecks": true,
     "jsx": "react",
     "sourceMap": true
-  },
-  "files": [
-    "index.tsx",
-    "test/smoke.tsx",
-    "example/index.tsx"
-  ]
+  }
 }
