@@ -204,7 +204,7 @@ function statusName(s: EventStatusFromMain): string {
   }
 }
 
-export function checkBrowserCompatibility(): string | undefined {
+export function checkVimWasmIsAvailable(): string | undefined {
   function notSupported(feat: string): string {
     return `${feat} is not supported by this browser. If you're using Firefox or Safari, please enable feature flag.`
   }

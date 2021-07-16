@@ -2,6 +2,8 @@ import Image from "next/image"
 import Link from "next/link"
 import styled from "styled-components"
 
+import Button from "../components/Button"
+
 const Container = styled.div`
   min-height: 100vh;
   display: flex;
@@ -28,15 +30,9 @@ const SubTitle = styled.p`
   font-size: 1.5rem;
 `
 
-const LinkButton = styled.a`
-  color: inherit;
+const LinkButton = styled(Button).attrs({ as: "a" })`
   font-size: 1.5rem;
-  background: transparent;
   margin: 3rem 1rem;
-  padding: 1rem;
-  border-radius: 6px;
-  border: var(--border);
-  border-width: 2px;
 `
 
 function Home() {

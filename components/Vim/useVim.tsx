@@ -1,7 +1,8 @@
-import * as React from "react"
+import type { MutableRefObject } from "react"
 import { useState, useEffect, useRef } from "react"
 import { useRerender } from "./useRerender"
 import { VimWasm } from "./vim-wasm"
+import vimrc from "./vimrc"
 import { VimProps, VimWasmControl } from "./types"
 
 export function useVim({
@@ -24,8 +25,8 @@ export function useVim({
   onVimCreated,
   onKey,
 }: VimProps): [
-  React.MutableRefObject<HTMLCanvasElement | null> | null,
-  React.MutableRefObject<HTMLInputElement | null> | null,
+  MutableRefObject<HTMLCanvasElement | null> | null,
+  MutableRefObject<HTMLInputElement | null> | null,
   VimWasmControl | null
 ] {
   const canvas = useRef<HTMLCanvasElement | null>(null)
@@ -57,7 +58,7 @@ export function useVim({
       debug,
       perf,
       clipboard,
-      files,
+      files: { ...files, "/home/web_user/.vim/vimrc": vimrc },
       fetchFiles,
       dirs,
       persistentDirs,

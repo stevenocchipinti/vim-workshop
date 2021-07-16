@@ -4,33 +4,19 @@ import Link from "next/link"
 import Image from "next/image"
 import styled from "styled-components"
 import type {} from "styled-components/cssprop"
-import Vim, {
+
+import Button from "../../components/Button"
+import Window from "../../components/Window"
+import {
+  Vim,
   VimWasmControl,
   checkVimWasmIsAvailable,
 } from "../../components/Vim"
-import Window from "../../components/Window"
 
 const VIM_WASM_AVAILABLITY_MESSAGE = checkVimWasmIsAvailable()
 
 const DIRS = ["/challenge"]
 const CMDARGS = ["/challenge/start"]
-
-const vimrc = `
-set expandtab tabstop=2 shiftwidth=2 softtabstop=2 splitright
-colorscheme onedark
-syntax enable
-
-inoremap <s-cr> <nop>
-
-function EndChallenge()
-  write
-  export
-  vsplit /challenge/end
-  windo diffthis
-  redraw
-  qall!
-endfunction
-`.trim()
 
 const Layout = styled.div`
   position: absolute;
@@ -103,16 +89,6 @@ const Key = styled.span`
   text-align: center;
 `
 
-const Button = styled.button`
-  color: inherit;
-  font: inherit;
-  background: transparent;
-  padding: 1rem;
-  border-radius: 6px;
-  border: var(--border);
-  border-width: 2px;
-`
-
 const ChallengePage: React.FC = () => {
   const [won, setWon] = useState<boolean | undefined>()
   const vimControl = React.useRef<VimWasmControl | null>()
@@ -166,7 +142,6 @@ const ChallengePage: React.FC = () => {
     setTargetKeystrokes(target)
     setTargetText(params.get("end") || "")
     setFiles({
-      "/home/web_user/.vim/vimrc": vimrc,
       "/challenge/start": start || "",
       "/challenge/end": end || "",
     })
