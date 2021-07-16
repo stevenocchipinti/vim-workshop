@@ -7,6 +7,7 @@ import type {} from "styled-components/cssprop"
 
 import Button from "../../components/Button"
 import Window from "../../components/Window"
+import Progress from "../../components/Progress"
 import {
   Vim,
   VimWasmControl,
@@ -179,9 +180,7 @@ const ChallengePage: React.FC = () => {
         </Link>
         <Button onClick={onSubmit}>Submit</Button>
         <Button onClick={onRestart}>Restart</Button>
-        <div>
-          {keystrokes.length} / {targetKeystrokes || "∞"} keystrokes
-        </div>
+        <Progress keystrokes={keystrokes} targetKeystrokes={targetKeystrokes} />
       </Toolbar>
 
       <WindowManager>

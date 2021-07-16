@@ -7,8 +7,8 @@
   --window-color: hsl(var(--primary-hue) 14% 18%);
 
   --border-color-standard: hsl(var(--primary-hue), 15%, 65%);
-  --border-color-success: green;
-  --border-color-failure: red;
+  --color-success: limegreen;
+  --color-failure: orangered;
   --border: 1px solid var(--border-color-standard);
 }
 

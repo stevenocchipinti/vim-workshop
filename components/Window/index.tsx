@@ -12,9 +12,9 @@ const Window = styled.div<Props>`
   border: 1px solid var(--border-color);
 
   ${({ $border }) =>
-    $border === "success" && `--border-color: var(--border-color-success);`}
+    $border === "success" && `--border-color: var(--color-success);`}
   ${({ $border }) =>
-    $border === "failure" && `--border-color: var(--border-color-failure);`}
+    $border === "failure" && `--border-color: var(--color-failure);`}
 `
 
 export default Window
