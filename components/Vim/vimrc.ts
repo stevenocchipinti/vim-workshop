@@ -1,7 +1,8 @@
 const vimrc = `
-set expandtab tabstop=2 shiftwidth=2 softtabstop=2 splitright
-colorscheme onedark
 syntax enable
+colorscheme onedark
+set guifont=monospace:h15
+set expandtab tabstop=2 shiftwidth=2 softtabstop=2 splitright
 
 inoremap <s-cr> <nop>
 

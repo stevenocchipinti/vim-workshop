@@ -32,6 +32,7 @@ const WindowManager = styled.main`
   margin: 2rem;
   grid-gap: 2rem;
   grid-template-columns: 1fr 1.5fr;
+  grid-template-rows: max-content 1fr;
   grid-template-areas:
     "intro   vim"
     "target  vim";
@@ -53,16 +54,19 @@ const Toolbar = styled.nav`
   background-color: var(--toolbar-color);
 `
 
-const IntroWindow = styled(Window)`
+const IntroWindow = styled(Window).attrs({ title: "Welcome to Vim Workshop" })`
   grid-area: intro;
 `
 
-const TargetWindow = styled(Window)`
+const TargetWindow = styled(Window).attrs({ title: "Target" })`
   grid-area: target;
-  font-family: monospace;
 `
 
-const VimWindow = styled(Window)`
+const Pre = styled.pre`
+  font-size: 1rem;
+`
+
+const VimWindow = styled(Window).attrs({ title: "Vim" })`
   grid-area: vim;
 
   :not(:focus-within) {
@@ -92,6 +96,7 @@ const Key = styled.span`
 
 const ChallengePage: React.FC = () => {
   const [won, setWon] = useState<boolean | undefined>()
+  const [vimRunning, setVimRunning] = useState<boolean>()
   const vimControl = React.useRef<VimWasmControl | null>()
   const [targetText, setTargetText] = useState("")
   const [targetKeystrokes, setTargetKeystrokes] = useState(0)
@@ -104,6 +109,14 @@ const ChallengePage: React.FC = () => {
     },
     [vimControl]
   )
+
+  const onVimInit = useCallback(() => {
+    setVimRunning(true)
+  }, [])
+
+  const onVimExit = useCallback(() => {
+    setVimRunning(false)
+  }, [])
 
   const onSubmit = useCallback(() => {
     vimControl.current?.vim?.cmdline("call EndChallenge()")
@@ -185,19 +198,20 @@ const ChallengePage: React.FC = () => {
 
       <WindowManager>
         <IntroWindow>
-          <h2 css="margin-bottom: 1rem">Welcome to Vim Workshop</h2>
-          <p>
-            Try to use the Vim window to transform the text into this target
-            text in as few keystrokes as you can.
-          </p>
+          Try to use the Vim window to transform the text into this target text
+          in as few keystrokes as you can.
         </IntroWindow>
-        <TargetWindow>{targetText || "Loading..."}</TargetWindow>
-        <VimWindow $border={getBorderState()}>
+        <TargetWindow>
+          <Pre>{targetText || "Loading..."}</Pre>
+        </TargetWindow>
+        <VimWindow active={vimRunning} border={getBorderState()}>
           {files && (
             <Vim
               worker="./vim-wasm/vim.js"
               onVimCreated={onVimCreated}
               onFileExport={onFileExport}
+              onVimInit={onVimInit}
+              onVimExit={onVimExit}
               cmdArgs={CMDARGS}
               dirs={DIRS}
               files={files}

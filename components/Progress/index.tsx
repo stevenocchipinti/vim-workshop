@@ -9,15 +9,29 @@ const Stack = styled.div`
   flex: 1 0;
 `
 
+const Inline = styled.div`
+  display: flex;
+  align-items: baseline;
+`
+const Big = styled.p`
+  font-size: 2rem;
+  margin: 0 0.5rem 0 1rem;
+`
+const CountUp: FC = ({ children }) => (
+  <Inline>
+    <Big>{children}</Big> keystrokes
+  </Inline>
+)
+
 interface NotchProps {
   color: string
 }
 
 const Notch = styled.span<NotchProps>`
-  transition: background-color 0.1s ease-out;
+  transition: background-color 0.3s ease-out;
   height: 0.25rem;
   background-color: ${({ color }) => color};
-  flex: 1 1 1rem;
+  flex: 1 1;
 `
 
 const Bar = styled.div`
@@ -45,15 +59,21 @@ const getNotchColor = (
   return "#FFF2"
 }
 
-const Progress: FC<ProgressProps> = ({ keystrokes, targetKeystrokes }) => (
-  <Stack>
-    {keystrokes.length} / {targetKeystrokes || "∞"} keystrokes
-    <Bar>
-      {[...new Array(targetKeystrokes)].map((_keystroke, i) => (
-        <Notch color={getNotchColor(i, keystrokes, targetKeystrokes)} key={i} />
-      ))}
-    </Bar>
-  </Stack>
-)
+const Progress: FC<ProgressProps> = ({ keystrokes, targetKeystrokes }) =>
+  targetKeystrokes ? (
+    <Stack>
+      {`${keystrokes.length} / ${targetKeystrokes} keystrokes`}
+      <Bar>
+        {[...new Array(targetKeystrokes)].map((_keystroke, i) => (
+          <Notch
+            color={getNotchColor(i, keystrokes, targetKeystrokes)}
+            key={i}
+          />
+        ))}
+      </Bar>
+    </Stack>
+  ) : (
+    <CountUp>{keystrokes.length}</CountUp>
+  )
 
 export default Progress
