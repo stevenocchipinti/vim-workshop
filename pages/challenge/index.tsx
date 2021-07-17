@@ -186,8 +186,8 @@ const ChallengePage: React.FC = () => {
             <Image
               src="/vim-workshop.svg"
               alt="Vim workshop logo"
-              width={75}
-              height={75}
+              width={50}
+              height={50}
             />
           </a>
         </Link>

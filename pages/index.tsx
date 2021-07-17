@@ -22,6 +22,7 @@ const Main = styled.main`
 `
 
 const Title = styled.h1`
+  margin-top: 2rem;
   line-height: 1.15;
   font-size: 4rem;
 `
