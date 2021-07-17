@@ -61,7 +61,6 @@ const IntroWindow = styled(Window).attrs({ title: "Welcome to Vim Workshop" })`
 const TargetWindow = styled(Window).attrs({ title: "Target" })`
   grid-area: target;
 `
-
 const Pre = styled.pre`
   font-size: 1rem;
 `
@@ -95,7 +94,7 @@ const Key = styled.span`
 `
 
 const ChallengePage: React.FC = () => {
-  const [won, setWon] = useState<boolean | undefined>()
+  const [correct, setCorrect] = useState<boolean | undefined>()
   const [vimRunning, setVimRunning] = useState<boolean>()
   const vimControl = React.useRef<VimWasmControl | null>()
   const [targetText, setTargetText] = useState("")
@@ -103,28 +102,13 @@ const ChallengePage: React.FC = () => {
   const [keystrokes, setKeystrokes] = useState<string[]>([])
   const [files, setFiles] = useState<{ [path: string]: string }>()
 
-  const onVimCreated = useCallback(
-    vControl => {
-      vimControl.current = vControl
-    },
-    [vimControl]
-  )
-
-  const onVimInit = useCallback(() => {
-    setVimRunning(true)
-  }, [])
-
-  const onVimExit = useCallback(() => {
-    setVimRunning(false)
-  }, [])
-
   const onSubmit = useCallback(() => {
     vimControl.current?.vim?.cmdline("call EndChallenge()")
   }, [vimControl])
 
   const onRestart = useCallback(() => {
     vimControl.current?.restart()
-    setWon(undefined)
+    setCorrect(undefined)
     setKeystrokes([])
   }, [vimControl])
 
@@ -141,7 +125,7 @@ const ChallengePage: React.FC = () => {
     (_path: string, buffer: ArrayBuffer) => {
       const td = new TextDecoder()
       const content = td.decode(buffer).replace(/\n$/, "")
-      setWon(targetText === content)
+      setCorrect(targetText === content)
       vimControl.current?.vim?.cmdline("qall!")
     },
     [targetText, vimControl]
@@ -172,10 +156,8 @@ const ChallengePage: React.FC = () => {
     alert(VIM_WASM_AVAILABLITY_MESSAGE)
 
   const getBorderState = () => {
-    if (won) return "success"
-    if (won === false) return "failure"
-    if (won === undefined) return undefined
-    return undefined
+    if (correct === undefined) return undefined
+    return correct ? "success" : "failure"
   }
 
   return (
@@ -207,11 +189,12 @@ const ChallengePage: React.FC = () => {
         <VimWindow active={vimRunning} border={getBorderState()}>
           {files && (
             <Vim
-              worker="./vim-wasm/vim.js"
-              onVimCreated={onVimCreated}
+              onVimCreated={vControl => {
+                vimControl.current = vControl
+              }}
               onFileExport={onFileExport}
-              onVimInit={onVimInit}
-              onVimExit={onVimExit}
+              onVimInit={() => setVimRunning(true)}
+              onVimExit={() => setVimRunning(false)}
               cmdArgs={CMDARGS}
               dirs={DIRS}
               files={files}

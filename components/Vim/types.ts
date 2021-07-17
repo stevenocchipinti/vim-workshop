@@ -6,7 +6,7 @@ export interface VimWasmControl {
 }
 
 export interface VimProps {
-  worker: string
+  worker?: string
   debug?: boolean
   perf?: boolean
   clipboard?: boolean

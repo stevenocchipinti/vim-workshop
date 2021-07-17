@@ -2,11 +2,11 @@ import type { MutableRefObject } from "react"
 import { useState, useEffect, useRef } from "react"
 import { useRerender } from "./useRerender"
 import { VimWasm } from "./vim-wasm"
-import vimrc from "./vimrc"
 import { VimProps, VimWasmControl } from "./types"
+import vimrc from "./vimrc"
 
 export function useVim({
-  worker,
+  worker = "./vim-wasm/vim.js",
   debug,
   perf,
   clipboard,
