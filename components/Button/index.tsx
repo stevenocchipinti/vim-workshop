@@ -11,6 +11,7 @@ const Button = styled.button`
   cursor: pointer;
   transition: 0.2s box-shadow;
   font-weight: 500;
+  text-align: center;
 
   :hover {
     background: #fff1;

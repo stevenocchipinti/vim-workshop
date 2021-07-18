@@ -11,11 +11,13 @@ const Stack = styled.div`
 
 const Inline = styled.div`
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: baseline;
 `
 const Big = styled.p`
   font-size: 2rem;
-  margin: 0 0.5rem 0 1rem;
+  margin: 0 0.5rem;
 `
 const CountUp: FC = ({ children }) => (
   <Inline>

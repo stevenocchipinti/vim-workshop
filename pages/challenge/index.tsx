@@ -1,5 +1,6 @@
-import * as React from "react"
-import { useEffect, useState, useCallback } from "react"
+import type { FC } from "react"
+import { useEffect, useState, useRef, useCallback } from "react"
+import { useRouter } from "next/router"
 import Link from "next/link"
 import Image from "next/image"
 import styled from "styled-components"
@@ -15,6 +16,9 @@ import {
 } from "../../components/Vim"
 
 const VIM_WASM_AVAILABLITY_MESSAGE = checkVimWasmIsAvailable()
+const DEFAULT_NAME = "Welcome to Vim Workshop"
+const DEFAULT_DESCRIPTION = `Try to use the Vim window to transform the text
+into this target text in as few keystrokes as you can.`
 
 const DIRS = ["/challenge"]
 const CMDARGS = ["/challenge/start"]
@@ -27,22 +31,24 @@ const Layout = styled.div`
 `
 
 const WindowManager = styled.main`
-  max-width: 1400px;
+  width: 100%;
+  max-width: var(--max-width);
   display: grid;
-  margin: 2rem;
+  padding: 2rem;
+  margin: 0 auto;
   grid-gap: 2rem;
-  grid-template-columns: 1fr 1.5fr;
   grid-template-rows: max-content 1fr;
+  grid-template-columns: 1fr;
   grid-template-areas:
-    "intro   vim"
-    "target  vim";
+    "intro"
+    "target"
+    "vim";
 
-  @media (max-width: 1100px) {
-    grid-template-columns: 1fr;
+  @media (min-width: 1100px) {
+    grid-template-columns: 1fr 1.5fr;
     grid-template-areas:
-      "intro"
-      "target"
-      "vim";
+      "intro   vim"
+      "target  vim";
   }
 `
 
@@ -54,7 +60,7 @@ const Toolbar = styled.nav`
   background-color: var(--toolbar-color);
 `
 
-const IntroWindow = styled(Window).attrs({ title: "Welcome to Vim Workshop" })`
+const IntroWindow = styled(Window)`
   grid-area: intro;
 `
 
@@ -93,12 +99,17 @@ const Key = styled.span`
   text-align: center;
 `
 
-const ChallengePage: React.FC = () => {
-  const [correct, setCorrect] = useState<boolean | undefined>()
+const ChallengePage: FC = () => {
+  const vimControl = useRef<VimWasmControl | null>()
   const [vimRunning, setVimRunning] = useState<boolean>()
-  const vimControl = React.useRef<VimWasmControl | null>()
-  const [targetText, setTargetText] = useState("")
-  const [targetKeystrokes, setTargetKeystrokes] = useState(0)
+  const [correct, setCorrect] = useState<boolean | undefined>()
+  const homeLinkRef = useRef<HTMLAnchorElement>(null)
+
+  const [name, setName] = useState("")
+  const [description, setDescription] = useState("")
+  const [start, setStart] = useState("")
+  const [end, setEnd] = useState("")
+  const [target, setTarget] = useState(0)
   const [keystrokes, setKeystrokes] = useState<string[]>([])
   const [files, setFiles] = useState<{ [path: string]: string }>()
 
@@ -112,11 +123,22 @@ const ChallengePage: React.FC = () => {
     setKeystrokes([])
   }, [vimControl])
 
+  const router = useRouter()
+  const onEdit = useCallback(() => {
+    router.push({
+      pathname: "/create-challenge",
+      query: { start, end: end.replace(/\n$/, ""), name, description, target },
+    })
+  }, [router, start, end, name, description, target])
+
   const onKey = useCallback(
     (event: KeyboardEvent) => {
-      if (event.key === "Enter" && event.shiftKey) onSubmit()
-      else if (event.key === "Escape" && event.shiftKey) onRestart()
-      else setKeystrokes(keystrokes => [...keystrokes, event.key])
+      const { key, shiftKey } = event
+
+      if (shiftKey && key === "Enter") onSubmit()
+      else if (shiftKey && key === "Escape") onRestart()
+      else if (shiftKey && key === "Tab") homeLinkRef.current?.focus()
+      else setKeystrokes(keystrokes => [...keystrokes, key])
     },
     [onSubmit, onRestart]
   )
@@ -124,21 +146,26 @@ const ChallengePage: React.FC = () => {
   const onFileExport = useCallback(
     (_path: string, buffer: ArrayBuffer) => {
       const td = new TextDecoder()
-      const content = td.decode(buffer).replace(/\n$/, "")
-      setCorrect(targetText === content)
+      const content = td.decode(buffer)
+      setCorrect(end === content)
       vimControl.current?.vim?.cmdline("qall!")
     },
-    [targetText, vimControl]
+    [end, vimControl]
   )
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
+    const name = params.get("name") || DEFAULT_NAME
+    const description = params.get("description") || DEFAULT_DESCRIPTION
     const start = params.get("start") || ""
-    const end = (params.get("end") || "").replace(/\n$/, "")
+    const end = params.get("end") + "\n" || ""
     const target = parseInt(params.get("target") || "0")
 
-    setTargetKeystrokes(target)
-    setTargetText(params.get("end") || "")
+    setName(name)
+    setDescription(description)
+    setTarget(target)
+    setStart(start)
+    setEnd(end)
     setFiles({
       "/challenge/start": start || "",
       "/challenge/end": end || "",
@@ -164,7 +191,7 @@ const ChallengePage: React.FC = () => {
     <Layout>
       <Toolbar>
         <Link href="/" passHref>
-          <a>
+          <a ref={homeLinkRef}>
             <Image
               src="/vim-workshop.svg"
               alt="Vim workshop logo"
@@ -175,16 +202,14 @@ const ChallengePage: React.FC = () => {
         </Link>
         <Button onClick={onSubmit}>Submit</Button>
         <Button onClick={onRestart}>Restart</Button>
-        <Progress keystrokes={keystrokes} targetKeystrokes={targetKeystrokes} />
+        <Button onClick={onEdit}>Edit</Button>
+        <Progress keystrokes={keystrokes} targetKeystrokes={target} />
       </Toolbar>
 
       <WindowManager>
-        <IntroWindow>
-          Try to use the Vim window to transform the text into this target text
-          in as few keystrokes as you can.
-        </IntroWindow>
+        <IntroWindow title={name}>{description}</IntroWindow>
         <TargetWindow>
-          <Pre>{targetText || "Loading..."}</Pre>
+          <Pre>{end || "Loading..."}</Pre>
         </TargetWindow>
         <VimWindow active={vimRunning} border={getBorderState()}>
           {files && (

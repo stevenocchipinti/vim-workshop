@@ -1,4 +1,6 @@
 :root {
+  --max-width: 1400px;
+
   --primary-hue: 222;
   --text-color: hsl(var(--primary-hue), 15%, 75%);
   --dim-text-color: hsl(var(--primary-hue), 15%, 50%);
