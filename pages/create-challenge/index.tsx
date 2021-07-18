@@ -3,7 +3,7 @@ import { useRouter } from "next/router"
 import Link from "next/link"
 import Image from "next/image"
 import styled from "styled-components"
-import Button from "../../components/Button"
+import { Button } from "../../components/Button"
 
 const Stack = styled.div`
   display: flex;
@@ -56,6 +56,12 @@ const Input = styled.input`
   padding: 1rem;
   color: inherit;
   font: inherit;
+  transition: 0.2s box-shadow;
+
+  :focus {
+    box-shadow: inset 0 0 0 2px;
+    outline: none;
+  }
 `
 
 const Textarea = styled.textarea`
@@ -69,6 +75,12 @@ const Textarea = styled.textarea`
   border-radius: 6px;
   padding: 1rem;
   font-size: 1rem;
+  transition: 0.2s box-shadow;
+
+  :focus {
+    box-shadow: inset 0 0 0 2px;
+    outline: none;
+  }
 `
 
 // May need to use this to base64 / URL encoded the start and end text:
@@ -80,7 +92,7 @@ const Page = () => {
   const [end, setEndText] = useState("")
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
-  const [target, setTarget] = useState(0)
+  const [target, setTarget] = useState("")
 
   const router = useRouter()
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -97,7 +109,7 @@ const Page = () => {
     setDescription(params.get("description") || "")
     setStartText(params.get("start") || "")
     setEndText(params.get("end") || "")
-    setTarget(parseInt(params.get("target") || "0"))
+    setTarget(params.get("target") || "0")
   }, [])
 
   return (
@@ -164,10 +176,10 @@ const Page = () => {
               <Input
                 placeholder="Target keystrokes"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setTarget(parseInt(e.target.value))
+                  setTarget(e.target.value)
                 }
                 name="target"
-                value={target}
+                value={target || ""}
               />
             </Stack>
             <Button>Generate</Button>

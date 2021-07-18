@@ -2,7 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import styled from "styled-components"
 
-import Button from "../components/Button"
+import { Button } from "../components/Button"
 
 const Container = styled.div`
   min-height: 100vh;
@@ -60,7 +60,10 @@ function Home() {
           <Link href="/create-challenge" passHref>
             <LinkButton>Create a challenge</LinkButton>
           </Link>
-          <Link href="/challenge?start=demo&end=fun&target=5" passHref>
+          <Link
+            href="/challenge?start=Here+are+some+shortcuts%3A+*+Shift+%2B+Enter+%3D+Submit+*+Shift+%2B+Escape+%3D+Restart+*+Shift+%2B+Tab+%3D+Move+focus+away+from+Vim&end=Here+are+some+shortcuts%3A%0A++*+Shift+%2B+Enter+%3D+Submit%0A++*+Shift+%2B+Escape+%3D+Restart%0A++*+Shift+%2B+Tab+%3D+Move+focus+away+from+Vim&target=15"
+            passHref
+          >
             <LinkButton>Try a challenge</LinkButton>
           </Link>
         </Actions>

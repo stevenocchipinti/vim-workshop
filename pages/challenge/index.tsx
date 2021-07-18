@@ -6,14 +6,18 @@ import Image from "next/image"
 import styled from "styled-components"
 import type {} from "styled-components/cssprop"
 
-import Button from "../../components/Button"
+import { Button, IconButton } from "../../components/Button"
 import Window from "../../components/Window"
 import Progress from "../../components/Progress"
+import History from "../../components/History"
 import {
   Vim,
   VimWasmControl,
   checkVimWasmIsAvailable,
 } from "../../components/Vim"
+
+import RefreshIcon from "../../components/icons/RefreshIcon"
+import PencilIcon from "../../components/icons/PencilIcon"
 
 const VIM_WASM_AVAILABLITY_MESSAGE = checkVimWasmIsAvailable()
 const DEFAULT_NAME = "Welcome to Vim Workshop"
@@ -54,10 +58,18 @@ const WindowManager = styled.main`
 
 const Toolbar = styled.nav`
   display: flex;
-  gap: 1rem;
+  gap: 2rem;
   align-items: center;
   padding: 0 2rem;
   background-color: var(--toolbar-color);
+`
+
+const ToolbarActions = styled.div`
+  display: grid;
+  gap: 0.5rem;
+  grid-template-areas:
+    "restart submit"
+    "edit  submit";
 `
 
 const IntroWindow = styled(Window)`
@@ -90,13 +102,14 @@ const Footer = styled.footer`
   background-color: var(--toolbar-color);
 `
 
-const Key = styled.span`
-  flex-shrink: 0;
-  border: 1px solid var(--text-color);
-  padding: 0.25rem;
-  border-radius: 5px;
-  min-width: 1rem;
-  text-align: center;
+const RestartIcon = styled(RefreshIcon)`
+  height: 1rem;
+  width: 1rem;
+`
+
+const EditIcon = styled(PencilIcon)`
+  height: 1rem;
+  width: 1rem;
 `
 
 const ChallengePage: FC = () => {
@@ -191,7 +204,7 @@ const ChallengePage: FC = () => {
     <Layout>
       <Toolbar>
         <Link href="/" passHref>
-          <a ref={homeLinkRef}>
+          <a ref={homeLinkRef} aria-label="Go to homepage">
             <Image
               src="/vim-workshop.svg"
               alt="Vim workshop logo"
@@ -200,10 +213,26 @@ const ChallengePage: FC = () => {
             />
           </a>
         </Link>
-        <Button onClick={onSubmit}>Submit</Button>
-        <Button onClick={onRestart}>Restart</Button>
-        <Button onClick={onEdit}>Edit</Button>
         <Progress keystrokes={keystrokes} targetKeystrokes={target} />
+        <ToolbarActions>
+          <IconButton
+            css="grid-area: restart;"
+            onClick={onRestart}
+            title="Restart (Shift + Escape)"
+          >
+            <RestartIcon />
+          </IconButton>
+          <IconButton css="grid-area: edit;" onClick={onEdit} title="Edit">
+            <EditIcon />
+          </IconButton>
+          <Button
+            css="grid-area: submit;"
+            onClick={onSubmit}
+            title="Submit (Shift + Enter)"
+          >
+            Submit
+          </Button>
+        </ToolbarActions>
       </Toolbar>
 
       <WindowManager>
@@ -230,9 +259,7 @@ const ChallengePage: FC = () => {
       </WindowManager>
 
       <Footer>
-        {keystrokes.map((keystroke, i) => (
-          <Key key={i}>{keystroke}</Key>
-        ))}
+        <History keystrokes={keystrokes} />
       </Footer>
     </Layout>
   )

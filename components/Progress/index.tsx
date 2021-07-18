@@ -12,8 +12,9 @@ const Stack = styled.div`
 const Inline = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: baseline;
+  flex-grow: 1;
 `
 const Big = styled.p`
   font-size: 2rem;
@@ -34,6 +35,13 @@ const Notch = styled.span<NotchProps>`
   height: 0.25rem;
   background-color: ${({ color }) => color};
   flex: 1 1;
+
+  :first-of-type {
+    border-radius: 2px 0 0 2px;
+  }
+  :last-of-type {
+    border-radius: 0 2px 2px 0;
+  }
 `
 
 const Bar = styled.div`
