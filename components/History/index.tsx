@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react"
 import styled from "styled-components"
 import * as clipboard from "clipboard-polyfill"
 import ClockIcon from "../icons/ClockIcon"
@@ -12,6 +13,8 @@ const Keys = styled.div`
   display: flex;
   gap: 0.5rem;
   margin-left: 0.5rem;
+  overflow: scroll;
+  scroll-behavior: smooth;
 `
 
 const Key = styled.span`
@@ -27,6 +30,12 @@ interface HistoryProps {
   keystrokes: string[]
 }
 const History = ({ keystrokes }: HistoryProps) => {
+  const keysRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = keysRef?.current
+    if (el) el.scrollLeft = el.scrollWidth
+  }, [keystrokes, keysRef])
+
   const hasKeystrokes = keystrokes.length > 0
   return (
     <>
@@ -41,7 +50,7 @@ const History = ({ keystrokes }: HistoryProps) => {
       >
         <HistoryIcon />
       </IconButton>
-      <Keys>
+      <Keys ref={keysRef}>
         {keystrokes.map((keystroke, i) => (
           <Key key={i}>{keystroke}</Key>
         ))}

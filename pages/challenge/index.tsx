@@ -95,7 +95,7 @@ const Footer = styled.footer`
   font-family: monospace;
   display: flex;
   gap: 0.5rem;
-  overflow: scroll;
+  overflow: hidden;
   font-size: 14px;
   padding: 0 2rem;
   align-items: center;
