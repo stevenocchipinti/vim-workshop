@@ -245,22 +245,26 @@ const ChallengePage: FC = () => {
         </Link>
         <Progress keystrokes={keystrokes} targetKeystrokes={target} />
         <ToolbarActions>
-          <IconButton
-            css="grid-area: restart;"
-            onClick={onRestart}
-            title="Restart (Alt + Escape)"
-          >
-            <RestartIcon />
-          </IconButton>
+          {vimRunning && keystrokes.length > 0 && (
+            <IconButton
+              css="grid-area: restart;"
+              onClick={onRestart}
+              title="Restart (Alt + Escape)"
+            >
+              <RestartIcon />
+            </IconButton>
+          )}
           <IconButton css="grid-area: edit;" onClick={onEdit} title="Edit">
             <EditIcon />
           </IconButton>
           <Button
-            css="grid-area: submit;"
-            onClick={onSubmit}
-            title="Submit (Alt + Enter)"
+            css="grid-area: submit; min-width: 7rem;"
+            onClick={vimRunning ? onSubmit : onRestart}
+            title={
+              vimRunning ? "Submit (Alt + Enter)" : "Restart (Alt + Escape)"
+            }
           >
-            Submit
+            {vimRunning ? "Submit" : "Restart"}
           </Button>
         </ToolbarActions>
       </Toolbar>
