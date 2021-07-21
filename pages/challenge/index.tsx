@@ -1,10 +1,10 @@
 import type { FC } from "react"
+import type {} from "styled-components/cssprop"
 import { useEffect, useState, useRef, useCallback } from "react"
+import styled from "styled-components"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import Image from "next/image"
-import styled from "styled-components"
-import type {} from "styled-components/cssprop"
 
 import { Button, IconButton } from "../../components/Button"
 import Window from "../../components/Window"
@@ -112,6 +112,35 @@ const EditIcon = styled(PencilIcon)`
   width: 1rem;
 `
 
+// :help keycodes
+const keyEventToVimCode = (event: KeyboardEvent) => {
+  const { key, shiftKey, ctrlKey, metaKey, altKey } = event
+
+  interface KeyToString {
+    [index: string]: string
+  }
+  const keyToString: KeyToString = {
+    Backspace: "BS",
+    Delete: "Del",
+    ArrowUp: "Up",
+    ArrowDown: "Down",
+    ArrowLeft: "Left",
+    ArrowRight: "Right",
+    Escape: "Esc",
+    Enter: "Enter",
+    Tab: "Tab",
+    " ": "Space",
+  }
+
+  const isSpecial = keyToString[key]
+  const keyString = keyToString[key] || key
+  if (isSpecial && shiftKey) return `<S-${keyString}>`
+  if (ctrlKey) return `<C-${keyString}>`
+  if (metaKey) return `<D-${keyString}>`
+  if (altKey) return `<A-${keyString}>`
+  return isSpecial ? `<${keyString}>` : key
+}
+
 const ChallengePage: FC = () => {
   const vimControl = useRef<VimWasmControl | null>()
   const [vimRunning, setVimRunning] = useState<boolean>()
@@ -146,12 +175,13 @@ const ChallengePage: FC = () => {
 
   const onKey = useCallback(
     (event: KeyboardEvent) => {
-      const { key, shiftKey } = event
+      const { key, altKey } = event
+      const vimCode = keyEventToVimCode(event)
 
-      if (shiftKey && key === "Enter") onSubmit()
-      else if (shiftKey && key === "Escape") onRestart()
-      else if (shiftKey && key === "Tab") homeLinkRef.current?.focus()
-      else setKeystrokes(keystrokes => [...keystrokes, key])
+      if (altKey && key === "Enter") onSubmit()
+      else if (altKey && key === "Escape") onRestart()
+      else if (altKey && key === "Tab") homeLinkRef.current?.focus()
+      else setKeystrokes(keystrokes => [...keystrokes, vimCode])
     },
     [onSubmit, onRestart]
   )
@@ -185,7 +215,7 @@ const ChallengePage: FC = () => {
     })
 
     const cb = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && event.shiftKey) onRestart()
+      if (event.key === "Escape" && event.altKey) onRestart()
     }
 
     addEventListener("keydown", cb)
@@ -218,7 +248,7 @@ const ChallengePage: FC = () => {
           <IconButton
             css="grid-area: restart;"
             onClick={onRestart}
-            title="Restart (Shift + Escape)"
+            title="Restart (Alt + Escape)"
           >
             <RestartIcon />
           </IconButton>
@@ -228,7 +258,7 @@ const ChallengePage: FC = () => {
           <Button
             css="grid-area: submit;"
             onClick={onSubmit}
-            title="Submit (Shift + Enter)"
+            title="Submit (Alt + Enter)"
           >
             Submit
           </Button>

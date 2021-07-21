@@ -61,7 +61,7 @@ function Home() {
             <LinkButton>Create a challenge</LinkButton>
           </Link>
           <Link
-            href="/challenge?start=Here+are+some+shortcuts%3A+*+Shift+%2B+Enter+%3D+Submit+*+Shift+%2B+Escape+%3D+Restart+*+Shift+%2B+Tab+%3D+Move+focus+away+from+Vim&end=Here+are+some+shortcuts%3A%0A++*+Shift+%2B+Enter+%3D+Submit%0A++*+Shift+%2B+Escape+%3D+Restart%0A++*+Shift+%2B+Tab+%3D+Move+focus+away+from+Vim&target=15"
+            href="/challenge?start=Here+are+some+shortcuts%3A+*+Alt+%2B+Enter+%3D+Submit+*+Alt+%2B+Escape+%3D+Restart+*+Alt+%2B+Tab+%3D+Move+focus+away+from+Vim&end=Here+are+some+shortcuts%3A%0A++*+Alt+%2B+Enter+%3D+Submit%0A++*+Alt+%2B+Escape+%3D+Restart%0A++*+Alt+%2B+Tab+%3D+Move+focus+away+from+Vim&target=15"
             passHref
           >
             <LinkButton>Try a challenge</LinkButton>
