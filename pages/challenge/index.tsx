@@ -39,7 +39,6 @@ const Layout = styled.div`
 
 const WindowManager = styled.main`
   width: 100%;
-  max-width: var(--max-width);
   display: grid;
   padding: 2rem;
   margin: 0 auto;
@@ -84,6 +83,8 @@ const TargetWindow = styled(Window).attrs({ title: "Target" })`
 `
 const Pre = styled.pre`
   font-size: 1rem;
+  white-space: break-spaces;
+  overflow: scroll;
 `
 
 const VimWindow = styled(Window).attrs({ title: "Vim" })`

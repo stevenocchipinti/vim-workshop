@@ -22,9 +22,10 @@ const Main = styled.main`
 `
 
 const Title = styled.h1`
-  margin-top: 2rem;
+  margin: 2rem 1rem 0;
   line-height: 1.15;
   font-size: 4rem;
+  text-align: center;
 `
 
 const SubTitle = styled.p`
