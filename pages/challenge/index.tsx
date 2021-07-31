@@ -19,6 +19,9 @@ import {
 import RefreshIcon from "../../components/icons/RefreshIcon"
 import PencilIcon from "../../components/icons/PencilIcon"
 
+import { useWindowSize } from "react-use"
+import Confetti from "react-confetti"
+
 const VIM_WASM_AVAILABLITY_MESSAGE = checkVimWasmIsAvailable()
 const DEFAULT_NAME = "Welcome to Vim Workshop"
 const DEFAULT_DESCRIPTION = `Try to use the Vim window to transform the text
@@ -155,6 +158,8 @@ const ChallengePage: FC = () => {
   const [keystrokes, setKeystrokes] = useState<string[]>([])
   const [files, setFiles] = useState<{ [path: string]: string }>()
 
+  const { width, height } = useWindowSize()
+
   const onSubmit = useCallback(() => {
     vimControl.current?.vim?.cmdline("call EndChallenge()")
   }, [vimControl])
@@ -232,6 +237,9 @@ const ChallengePage: FC = () => {
 
   return (
     <Layout>
+      {correct && (target ? keystrokes.length === target : true) && (
+        <Confetti width={width} height={height} recycle={false} />
+      )}
       <Toolbar>
         <Link href="/" passHref>
           <a ref={homeLinkRef} aria-label="Go to homepage">
