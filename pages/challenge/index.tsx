@@ -155,6 +155,7 @@ const ChallengePage: FC = () => {
   const [start, setStart] = useState("")
   const [end, setEnd] = useState("")
   const [target, setTarget] = useState(0)
+  const [filetype, setFiletype] = useState("")
   const [keystrokes, setKeystrokes] = useState<string[]>([])
   const [files, setFiles] = useState<{ [path: string]: string }>()
 
@@ -174,9 +175,16 @@ const ChallengePage: FC = () => {
   const onEdit = useCallback(() => {
     router.push({
       pathname: "/create-challenge",
-      query: { start, end: end.replace(/\n$/, ""), name, description, target },
+      query: {
+        start,
+        end: end.replace(/\n$/, ""),
+        name,
+        description,
+        target,
+        filetype,
+      },
     })
-  }, [router, start, end, name, description, target])
+  }, [router, start, end, name, description, target, filetype])
 
   const onKey = useCallback(
     (event: KeyboardEvent) => {
@@ -208,10 +216,13 @@ const ChallengePage: FC = () => {
     const start = params.get("start") || ""
     const end = params.get("end") + "\n" || ""
     const target = parseInt(params.get("target") || "0")
+    const filetype = params.get("filetype") || ""
+    const sanitizedFiletype = filetype.replace(/[^a-zA-Z0-9]/g, "")
 
     setName(name)
     setDescription(description)
     setTarget(target)
+    setFiletype(sanitizedFiletype)
     setStart(start)
     setEnd(end)
     setFiles({
@@ -286,6 +297,7 @@ const ChallengePage: FC = () => {
           {files && (
             <Vim
               onVimCreated={vControl => {
+                vControl?.vim?.cmdline(`set filetype=${filetype}`)
                 vimControl.current = vControl
               }}
               onFileExport={onFileExport}

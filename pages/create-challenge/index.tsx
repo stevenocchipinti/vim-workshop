@@ -8,6 +8,7 @@ import { Button } from "../../components/Button"
 const Stack = styled.div`
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
   gap: 2rem;
 `
 
@@ -66,7 +67,6 @@ const Input = styled.input`
 
 const Textarea = styled.textarea`
   resize: vertical;
-  height: 15rem;
   width: 100%;
   border: 0;
   color: inherit;
@@ -93,13 +93,15 @@ const Page = () => {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [target, setTarget] = useState("")
+  const [filetype, setFiletype] = useState("")
 
   const router = useRouter()
+
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     router.push({
       pathname: "/challenge",
-      query: { start, end, name, description, target },
+      query: { start, end, name, description, filetype, target },
     })
   }
 
@@ -109,7 +111,8 @@ const Page = () => {
     setDescription(params.get("description") || "")
     setStartText(params.get("start") || "")
     setEndText(params.get("end") || "")
-    setTarget(params.get("target") || "0")
+    setTarget(params.get("target") || "")
+    setFiletype(params.get("filetype") || "")
   }, [])
 
   return (
@@ -164,9 +167,8 @@ const Page = () => {
                 value={name}
               />
               <Textarea
-                css="font: inherit;"
+                css="flex-grow: 1; font: inherit;"
                 placeholder="Description"
-                rows={10}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                   setDescription(e.target.value)
                 }
@@ -180,6 +182,15 @@ const Page = () => {
                 }
                 name="target"
                 value={target || ""}
+                type="number"
+              />
+              <Input
+                placeholder="Filetype"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setFiletype(e.target.value)
+                }
+                name="target"
+                value={filetype || ""}
               />
             </Stack>
             <Button>Generate</Button>
