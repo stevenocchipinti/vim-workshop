@@ -70,12 +70,15 @@ function Home() {
           <Link href="/create-challenge" passHref>
             <LinkButton>Create a challenge</LinkButton>
           </Link>
-          <Link
-            href="/challenge?start=Here+are+some+shortcuts%3A+*+Alt+%2B+Enter+%3D+Submit+*+Alt+%2B+Escape+%3D+Restart+*+Alt+%2B+Tab+%3D+Move+focus+away+from+Vim&end=Here+are+some+shortcuts%3A%0A++*+Alt+%2B+Enter+%3D+Submit%0A++*+Alt+%2B+Escape+%3D+Restart%0A++*+Alt+%2B+Tab+%3D+Move+focus+away+from+Vim&target=15"
-            passHref
-          >
+          <Link href="/golf" passHref>
             <LinkButton>Try a challenge</LinkButton>
           </Link>
+          {/* <Link href="/golf" passHref> */}
+          {/*   <LinkButton>Golf</LinkButton> */}
+          {/* </Link> */}
+          {/* <Link href="/playground" passHref> */}
+          {/*   <LinkButton>Playground</LinkButton> */}
+          {/* </Link> */}
         </Actions>
       </Main>
     </Container>
