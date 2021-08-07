@@ -15,6 +15,7 @@ import {
   VimWasmControl,
   checkVimWasmIsAvailable,
 } from "../../components/Vim"
+import { challengeVimrc as vimrc } from "../../components/Vim/vimrc"
 
 import RefreshIcon from "../../components/icons/RefreshIcon"
 import PencilIcon from "../../components/icons/PencilIcon"
@@ -227,6 +228,7 @@ const ChallengePage: FC = () => {
     setStart(start)
     setEnd(end)
     setFiles({
+      "/home/web_user/.vim/vimrc": vimrc,
       "/challenge/start": start || "",
       "/challenge/end": end || "",
     })

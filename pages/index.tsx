@@ -34,13 +34,14 @@ const SubTitle = styled.p`
 
 const Actions = styled.div`
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
+  grid-auto-flow: row;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin: 4rem;
 `
 
 const LinkButton = styled(Button).attrs({ as: "a" })`
   font-size: 1.5rem;
-  margin: 3rem 1rem;
 `
 
 function Home() {
@@ -57,6 +58,15 @@ function Home() {
         <SubTitle>A place to work on your vim skills.</SubTitle>
 
         <Actions>
+          <Link href="/playground" passHref>
+            <LinkButton>Playground</LinkButton>
+          </Link>
+          <Link
+            href="https://github.com/stevenocchipinti/vim-workshop"
+            passHref
+          >
+            <LinkButton>Github</LinkButton>
+          </Link>
           <Link href="/create-challenge" passHref>
             <LinkButton>Create a challenge</LinkButton>
           </Link>

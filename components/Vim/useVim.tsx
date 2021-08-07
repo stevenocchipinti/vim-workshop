@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from "react"
 import { useRerender } from "./useRerender"
 import { VimWasm } from "./vim-wasm"
 import { VimProps, VimWasmControl } from "./types"
-import vimrc from "./vimrc"
 
 export function useVim({
   worker = "./vim-wasm/vim.js",
@@ -58,7 +57,7 @@ export function useVim({
       debug,
       perf,
       clipboard,
-      files: { ...files, "/home/web_user/.vim/vimrc": vimrc },
+      files,
       fetchFiles,
       dirs,
       persistentDirs,
