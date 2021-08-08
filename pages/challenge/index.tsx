@@ -1,10 +1,13 @@
 import type { FC } from "react"
 import type {} from "styled-components/cssprop"
+
 import { useEffect, useState, useRef, useCallback } from "react"
 import styled from "styled-components"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import Image from "next/image"
+import { useWindowSize } from "react-use"
+import Confetti from "react-confetti"
 
 import { Button, IconButton } from "../../components/Button"
 import Window from "../../components/Window"
@@ -17,12 +20,10 @@ import {
 } from "../../components/Vim"
 import { challengeVimrc as vimrc } from "../../components/Vim/vimrc"
 import SyntaxHighlighter from "../../components/SyntaxHighlighter"
+import Markdown from "../../components/Markdown"
 
 import RefreshIcon from "../../components/icons/RefreshIcon"
 import PencilIcon from "../../components/icons/PencilIcon"
-
-import { useWindowSize } from "react-use"
-import Confetti from "react-confetti"
 
 const VIM_WASM_AVAILABLITY_MESSAGE = checkVimWasmIsAvailable()
 const DEFAULT_NAME = "Welcome to Vim Workshop"
@@ -82,11 +83,6 @@ const IntroWindow = styled(Window)`
 
 const TargetWindow = styled(Window).attrs({ title: "Target" })`
   grid-area: target;
-`
-const Pre = styled.pre`
-  font-size: 1rem;
-  white-space: break-spaces;
-  overflow: scroll;
 `
 
 const VimWindow = styled(Window).attrs({ title: "Vim" })`
@@ -293,7 +289,9 @@ const ChallengePage: FC = () => {
       </Toolbar>
 
       <WindowManager>
-        <IntroWindow title={name}>{description}</IntroWindow>
+        <IntroWindow title={name}>
+          <Markdown>{description}</Markdown>
+        </IntroWindow>
         <TargetWindow>
           <SyntaxHighlighter language={filetype || "text"}>
             {end}
