@@ -16,6 +16,7 @@ import {
   checkVimWasmIsAvailable,
 } from "../../components/Vim"
 import { challengeVimrc as vimrc } from "../../components/Vim/vimrc"
+import SyntaxHighlighter from "../../components/SyntaxHighlighter"
 
 import RefreshIcon from "../../components/icons/RefreshIcon"
 import PencilIcon from "../../components/icons/PencilIcon"
@@ -294,7 +295,9 @@ const ChallengePage: FC = () => {
       <WindowManager>
         <IntroWindow title={name}>{description}</IntroWindow>
         <TargetWindow>
-          <Pre>{end || "Loading..."}</Pre>
+          <SyntaxHighlighter language={filetype || "text"}>
+            {end}
+          </SyntaxHighlighter>
         </TargetWindow>
         <VimWindow active={vimRunning} border={getBorderState()}>
           {files && (
