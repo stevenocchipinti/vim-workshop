@@ -17,8 +17,8 @@ import {
   Vim,
   VimWasmControl,
   checkVimWasmIsAvailable,
+  challengeVimrc as vimrc,
 } from "../../components/Vim"
-import { challengeVimrc as vimrc } from "../../components/Vim/vimrc"
 import SyntaxHighlighter from "../../components/SyntaxHighlighter"
 import Markdown from "../../components/Markdown"
 

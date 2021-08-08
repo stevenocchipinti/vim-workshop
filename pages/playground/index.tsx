@@ -11,8 +11,8 @@ import {
   Vim,
   VimWasmControl,
   checkVimWasmIsAvailable,
+  playgroundVimrc as vimrc,
 } from "../../components/Vim"
-import { playgroundVimrc as vimrc } from "../../components/Vim/vimrc"
 
 const VIM_WASM_AVAILABLITY_MESSAGE = checkVimWasmIsAvailable()
 const DOT_VIM_DIRS = ["/home/web_user/.vim"]
