@@ -27,6 +27,7 @@ const Layout = styled.div`
 
 const Toolbar = styled.nav`
   display: flex;
+  justify-content: space-between;
   gap: 2rem;
   align-items: center;
   padding: 0 2rem;
