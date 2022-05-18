@@ -24,6 +24,7 @@ import Markdown from "../../components/Markdown"
 
 import RefreshIcon from "../../components/icons/RefreshIcon"
 import PencilIcon from "../../components/icons/PencilIcon"
+import { createEncodedString, parseEncodedParam } from "../../lib/url-params"
 
 const VIM_WASM_AVAILABLITY_MESSAGE = checkVimWasmIsAvailable()
 const DEFAULT_NAME = "Welcome to Vim Workshop"
@@ -175,12 +176,14 @@ const ChallengePage: FC = () => {
     router.push({
       pathname: "/create-challenge",
       query: {
-        start,
-        end: end.replace(/\n$/, ""),
-        name,
-        description,
-        target,
-        filetype,
+        code: createEncodedString({
+          start,
+          end: end.replace(/\n$/, ""),
+          name,
+          description,
+          target: target.toString(),
+          filetype,
+        }),
       },
     })
   }, [router, start, end, name, description, target, filetype])
@@ -209,13 +212,13 @@ const ChallengePage: FC = () => {
   )
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const name = params.get("name") || DEFAULT_NAME
-    const description = params.get("description") || DEFAULT_DESCRIPTION
-    const start = params.get("start") || ""
-    const end = params.get("end") + "\n" || ""
-    const target = parseInt(params.get("target") || "0")
-    const filetype = params.get("filetype") || ""
+    const params = parseEncodedParam()
+    const name = params.name || DEFAULT_NAME
+    const description = params.description || DEFAULT_DESCRIPTION
+    const start = params.start || ""
+    const end = params.end + "\n" || ""
+    const target = parseInt(params.target || "0")
+    const filetype = params.filetype || ""
     const sanitizedFiletype = filetype.replace(/[^a-zA-Z0-9]/g, "")
 
     setName(name)

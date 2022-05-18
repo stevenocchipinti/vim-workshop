@@ -4,6 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import styled from "styled-components"
 import { Button } from "../../components/Button"
+import { createEncodedString, parseEncodedParam } from "../../lib/url-params"
 
 const Stack = styled.div`
   display: flex;
@@ -83,13 +84,9 @@ const Textarea = styled.textarea`
   }
 `
 
-// May need to use this to base64 / URL encoded the start and end text:
-// const encode = (str: string) => btoa(encodeURIComponent(str))
-// const decode = (str: string) => decodeURIComponent(atob(str))
-
 const Page = () => {
-  const [start, setStartText] = useState("")
-  const [end, setEndText] = useState("")
+  const [start, setStart] = useState("")
+  const [end, setEnd] = useState("")
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [target, setTarget] = useState("")
@@ -101,18 +98,27 @@ const Page = () => {
     e.preventDefault()
     router.push({
       pathname: "/challenge",
-      query: { start, end, name, description, filetype, target },
+      query: {
+        code: createEncodedString({
+          start,
+          end,
+          name,
+          description,
+          filetype,
+          target,
+        }),
+      },
     })
   }
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    setName(params.get("name") || "")
-    setDescription(params.get("description") || "")
-    setStartText(params.get("start") || "")
-    setEndText(params.get("end") || "")
-    setTarget(params.get("target") || "")
-    setFiletype(params.get("filetype") || "")
+    const params = parseEncodedParam()
+    setName(params.name || "")
+    setDescription(params.description || "")
+    setStart(params.start || "")
+    setEnd(params.end || "")
+    setTarget(params.target || "")
+    setFiletype(params.filetype || "")
   }, [])
 
   return (
@@ -139,7 +145,7 @@ const Page = () => {
             placeholder="Start text"
             rows={10}
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              setStartText(e.target.value)
+              setStart(e.target.value)
             }
             name="start"
             value={start}
@@ -150,7 +156,7 @@ const Page = () => {
             placeholder="End text"
             rows={10}
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              setEndText(e.target.value)
+              setEnd(e.target.value)
             }
             name="end"
             value={end}
