@@ -21,7 +21,20 @@ export const createEncodedString = (codeObject: EncodedParams) =>
 // returns a JS object
 export const parseEncodedParam = (paramKey = "code"): EncodedParams => {
   const urlParams = new URLSearchParams(window.location.search)
+
+  // New compressed URL parameter
   const codeString = urlParams.get(paramKey) || ""
-  const data = lzString.decompressFromEncodedURIComponent(codeString)
-  return data ? JSON.parse(data) : {}
+  if (codeString) {
+    const data = lzString.decompressFromEncodedURIComponent(codeString)
+    return data ? JSON.parse(data) : {}
+  } else {
+    // Legacy uncompressed separate URL parameters
+    const name = urlParams.get("name") || ""
+    const description = urlParams.get("description") || ""
+    const start = urlParams.get("start") || ""
+    const end = urlParams.get("end") || ""
+    const target = urlParams.get("target") || ""
+    const filetype = urlParams.get("filetype") || ""
+    return { start, end, name, description, filetype, target }
+  }
 }
