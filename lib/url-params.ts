@@ -19,7 +19,7 @@ export const createEncodedString = (codeObject: EncodedParams) =>
 
 // This function takes the encoded value of the code parameter from the URL and
 // returns a JS object
-export const parseEncodedParam = (paramKey = "code") => {
+export const parseEncodedParam = (paramKey = "code"): EncodedParams => {
   const urlParams = new URLSearchParams(window.location.search)
   const codeString = urlParams.get(paramKey) || ""
   const data = lzString.decompressFromEncodedURIComponent(codeString)
