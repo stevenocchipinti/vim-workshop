@@ -71,7 +71,7 @@ function Home() {
             <LinkButton>Create a challenge</LinkButton>
           </Link>
           <Link
-            href="/challenge?start=Here+are+some+shortcuts%3A+*+Alt+%2B+Enter+%3D+Submit+*+Alt+%2B+Escape+%3D+Restart+*+Alt+%2B+Tab+%3D+Move+focus+away+from+Vim&end=Here+are+some+shortcuts%3A%0A++*+Alt+%2B+Enter+%3D+Submit%0A++*+Alt+%2B+Escape+%3D+Restart%0A++*+Alt+%2B+Tab+%3D+Move+focus+away+from+Vim&target=15"
+            href="/challenge?code=N4IgzgLghgThIC4QAkCmNUAJZbAewFtcALPOAYwFcIwFMAqTAQQBsJMBqTAUQDsJ0mALyYAypQBGBAJbtGrdl25hyUAA5YRAJVSRYc5m06YAKlAnDMAWTwA3LADM8VMNgDuUAJ6YHMQpgA1aQIQABoQVF4AE0QUdCwcTHwiJNIKaloAHV5MBkNFHn5BEXEpWWzc%2BSMlFXVNTB09OAq8hWMzCxEbex9nSlcoD29ffyCQ8N4oIliwkCjdchhpNQhpPF4Z8IdpFlQITw1NkGgYAHM92IBGAFYQAF8gA"
             passHref
           >
             <LinkButton>Try a challenge</LinkButton>
