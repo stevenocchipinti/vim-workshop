@@ -58,6 +58,15 @@ function Home() {
         <SubTitle>A place to work on your vim skills.</SubTitle>
 
         <Actions>
+          <Link
+            href="/challenge?code=N4IgzgLghgThIC4QAkCmNUAJZbAewFtcALPOAYwFcIwFMAqTAQQBsJMBqTAUQDsJ0mALyYAypQBGBAJbtGrdl25hyUAA5YRAJVSRYc5m06YAKlAnDMAWTwA3LADM8VMNgDuUAJ6YHMQpgA1aQIQABoQVF4AE0QUdCwcTHwiJNIKaloAHV5MBkNFHn5BEXEpWWzc%2BSMlFXVNTB09OAq8hWMzCxEbex9nSlcoD29ffyCQ8N4oIliwkCjdchhpNQhpPF4Z8IdpFlQITw1NkGgYAHM92IBGAFYQAF8gA"
+            passHref
+          >
+            <LinkButton>Try a challenge</LinkButton>
+          </Link>
+          <Link href="/create-challenge" passHref>
+            <LinkButton>Create a challenge</LinkButton>
+          </Link>
           <Link href="/playground" passHref>
             <LinkButton>Playground</LinkButton>
           </Link>
@@ -66,15 +75,6 @@ function Home() {
             passHref
           >
             <LinkButton>Github</LinkButton>
-          </Link>
-          <Link href="/create-challenge" passHref>
-            <LinkButton>Create a challenge</LinkButton>
-          </Link>
-          <Link
-            href="/challenge?code=N4IgzgLghgThIC4QAkCmNUAJZbAewFtcALPOAYwFcIwFMAqTAQQBsJMBqTAUQDsJ0mALyYAypQBGBAJbtGrdl25hyUAA5YRAJVSRYc5m06YAKlAnDMAWTwA3LADM8VMNgDuUAJ6YHMQpgA1aQIQABoQVF4AE0QUdCwcTHwiJNIKaloAHV5MBkNFHn5BEXEpWWzc%2BSMlFXVNTB09OAq8hWMzCxEbex9nSlcoD29ffyCQ8N4oIliwkCjdchhpNQhpPF4Z8IdpFlQITw1NkGgYAHM92IBGAFYQAF8gA"
-            passHref
-          >
-            <LinkButton>Try a challenge</LinkButton>
           </Link>
         </Actions>
       </Main>
