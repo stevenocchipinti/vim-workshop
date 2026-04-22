@@ -1,4 +1,4 @@
-import type { FC } from "react"
+import type { FC, ReactNode } from "react"
 import styled from "styled-components"
 
 const Stack = styled.div`
@@ -20,7 +20,11 @@ const Big = styled.p`
   font-size: 2rem;
   margin: 0 0.5rem;
 `
-const CountUp: FC = ({ children }) => (
+interface CountUpProps {
+  children: ReactNode
+}
+
+const CountUp: FC<CountUpProps> = ({ children }) => (
   <Inline>
     <Big>{children}</Big> keystrokes
   </Inline>

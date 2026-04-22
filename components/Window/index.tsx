@@ -1,4 +1,4 @@
-import type { FC } from "react"
+import type { FC, ReactNode } from "react"
 import styled from "styled-components"
 
 interface ContainerProps {
@@ -41,6 +41,7 @@ interface WindowProps {
   border?: "success" | "failure" | "standard"
   active?: boolean
   title?: string
+  children?: ReactNode
 }
 const Window: FC<WindowProps> = ({
   children,
