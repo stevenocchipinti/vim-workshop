@@ -255,15 +255,13 @@ const ChallengePage: FC = () => {
         <Confetti width={width} height={height} recycle={false} />
       )}
       <Toolbar>
-        <Link href="/" passHref>
-          <a ref={homeLinkRef} aria-label="Go to homepage">
-            <Image
-              src="/vim-workshop.svg"
-              alt="Vim workshop logo"
-              width={50}
-              height={50}
-            />
-          </a>
+        <Link href="/" ref={homeLinkRef} aria-label="Go to homepage">
+          <Image
+            src="/vim-workshop.svg"
+            alt="Vim workshop logo"
+            width={50}
+            height={50}
+          />
         </Link>
         <Progress keystrokes={keystrokes} targetKeystrokes={target} />
         <ToolbarActions>

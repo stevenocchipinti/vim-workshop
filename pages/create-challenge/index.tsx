@@ -124,15 +124,13 @@ const Page = () => {
   return (
     <>
       <Header>
-        <Link href="/" passHref>
-          <a>
-            <Image
-              src="/vim-workshop.svg"
-              alt="Vim workshop logo"
-              width={50}
-              height={50}
-            />
-          </a>
+        <Link href="/" aria-label="Go to homepage">
+          <Image
+            src="/vim-workshop.svg"
+            alt="Vim workshop logo"
+            width={50}
+            height={50}
+          />
         </Link>
       </Header>
 
